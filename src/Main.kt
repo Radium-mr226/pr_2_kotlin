@@ -32,7 +32,7 @@ fun main() {
                 "Создать приложение, в котором пользователь вводит массив из различных слов. На выходе приложение должно показать" +
                 "слова сгруппированные по признаку \"состоят из одинаковых букв\".\n")
         println("Введите номер задания(1-5):")
-        com = readln().toInt()
+        com = checkCom(1,5)
         when (com) {
             1 -> {
                 task1()
@@ -57,57 +57,123 @@ fun main() {
     }
 }
 
+fun  checkCom( first:Int,second:Int): Int{
+    var numString = readln();
+    var num=0
+    var flagStr = false
+    var flag3 = false
+    while (!flagStr && !flag3) {
+        if (numString.toIntOrNull() != null) {
+            num = numString.toInt()
+            flagStr = true
+            if (num > second || num < first) {
+                println("Введите корректное значение")
+                numString = readln()
+                flagStr = false
+                flag3 = false
+            }
+            else
+                flag3=true
+        } else {
+            println("Введите корректное значение")
+            numString = readln()
+            flagStr = false
+            flag3 = false
+        }
+    }
+    return num
+}
+
+/*
+fun  checkCom(): Int{
+    var numString = readln();
+    var num=0
+    var flagStr = false
+    var flag3 = false
+    while (!flagStr && !flag3) {
+        if (numString.toIntOrNull() != null) {
+            num = numString.toInt()
+            flagStr = true
+            if (num > 2 || num < 1) {
+                println("Введите корректное значение")
+                numString = readln()
+                flagStr = false
+                flag3 = false
+            }
+            else
+                flag3=true
+        } else {
+            println("Введите корректное значение")
+            numString = readln()
+            flagStr = false
+            flag3 = false
+        }
+    }
+    return num
+}
+ */
+
 fun task1(){
     println("запрашивается количество строк и столбцов для двумерного массива\n" +
             "- вводится необходимое количество трехзначных чисел (числа могут повторяться)\n" +
             "- подсчитывается количество различных цифр в полученном массиве\n" +
             "- на консоль выводится двумерный массив из введенных чисел и количество различных цифр используемых в данном массиве\n");
     println("Введите количество строк: ")
-    val rows = readln().toInt();
+    var rowsString = readln()
+
+    while (rowsString.toIntOrNull() == null)
+    {
+        println("Введите корректное значение")
+        rowsString = readln()
+    }
+    var rows = rowsString.toInt()
     println("Введите количество столбцов: ")
-    val cols = readln().toInt();
+
+
+    var colsString = readln()
+    while (colsString.toIntOrNull() == null)
+    {
+        println("Введите корректное значение")
+        colsString = readln()
+    }
+    var cols = colsString.toInt()
+
+
     println("Как заполнить массив(1 - рандомно, 2 - с клавиатуры):")
-    var com = readln().toInt()
+    var com = checkCom(1,2)
+
+
     val matrix = Array(rows){ IntArray(cols) }
     println();
     when (com){
         1 -> {
             for (i in 0 until  rows)
                 for (j in 0 until cols)
-                    matrix[i][j] = (0..255).random()
+                    matrix[i][j] = (100..999).random()
         }
         2 -> {
-            for (i in 0 until  rows)
-                for (j in 0 until cols)
-                {
+            for (i in 0 until rows)
+                for (j in 0 until cols) {
                     println("Введите [$i][$j] элемент: ")
-                    matrix[i][j] = readln().toInt()
-                }
-        }
-        else -> {
-            for (i in 0 until  rows)
-            {
-                for (j in 0 until cols)
-                {
-                    print(matrix[i][j].toString() + "\t");
-                }
-                println();
-            }
-        }
+                    var check = checkCom(100, 999)
+                    matrix[i][j] = check
 
+                }
+        }
     }
-
+    var uniq = ""
     for (i in 0 until  rows)
     {
         for (j in 0 until cols)
         {
             print(matrix[i][j].toString() + "\t");
+            uniq+=matrix[i][j]
         }
         println();
     }
 
-    var uniq = matrix.flatMap { it.toList() }.toSet().size;
-    println("В массиве использовано $uniq различных цифр")
+    var uniqSet = uniq.toCharArray().toSet();
+    println("В массиве использовано ${uniqSet.size} различных цифр")
     println("\n\nдля продолжениея нажмите Enter")
     readln()
 }
@@ -123,7 +189,7 @@ fun task2() {
         arrayOf(2, 3, 7, 8, 1)
     )
     println("Как заполнить массив(1 - рандомно, 2 - с клавиатуры, 3 - заготовленный симитричный массив):")
-    var com = readln().toInt()
+    var com = checkCom(1,3)
     when (com){
         1 -> {
             for (i in 0 until  5)
@@ -144,6 +210,16 @@ fun task2() {
 
     }
 
+    for (i in 0 until  5)
+    {
+        for (j in 0 until 5)
+        {
+            print(matrix[i][j].toString() + "\t");
+        }
+        println();
+    }
+
+
     var flag = true;
     for (i in 0 until 5)
     {
@@ -157,7 +233,7 @@ fun task2() {
         }
     }
     if (flag)
-        println("Массив является симметричным относительно главной диагонали")
+        println("\nМассив является симметричным относительно главной диагонали")
     else
         println("Массив не является симметричным относительно главной диагонали")
     println("\n\nдля продолжениея нажмите Enter")
@@ -165,7 +241,7 @@ fun task2() {
 }
 
 
-fun task3(){
+fun task3() {
 
     val letterToNumber = mapOf(
         'А' to 21, 'Б' to 13, 'В' to 4, 'Г' to 20,
@@ -175,34 +251,61 @@ fun task3(){
         'П' to 6, 'Р' to 16, 'С' to 15, 'Т' to 11,
         'У' to 26, 'Ф' to 5, 'Х' to 30, 'Ц' to 27,
         'Ч' to 8, 'Ш' to 18, 'Щ' to 10, 'Ь' to 33,
-        'Ы' to 31, 'Ъ' to 32, 'Э' to 19,'Ю' to 7,
+        'Ы' to 31, 'Ъ' to 32, 'Э' to 19, 'Ю' to 7,
         'Я' to 17
     )
 
     println("Что вы хотите сделать(1 - зашифровать слово; 2 - расшифровать слово):")
-    var com: Int = readln().toInt()
+    var com: Int = checkCom(1,2)
+
     println("Введите ключевое слово: ")
-    var keyWord = readln()
-    while ((com!=1) or (com!= 2)) {
-        when (com) {
-            1 -> {
+    var keyWord = readln().uppercase().toCharArray()
 
-                println("Введите слово, которое хотите зашифровать: ")
-                var word = readln()
+    println("Введите слово, которое хотите (за)расшифровать: ")
+    var word = readln().uppercase().toCharArray()
+    var keyWordArr = CharArray(word.size)
+    var counter = 0
+    var result = ""
 
-            }
-
-            2 -> {
-                println("Введите слово, которое хотите расшифровать: ")
-                var word = readln()
-            }
-
-            else -> {
-                println("Укажите корректную комманду")
-            }
+    for (i in 0 until word.size) {
+        keyWordArr[i] = keyWord[counter]
+        counter++
+        if (counter == keyWord.size) {
+            counter = 0
         }
     }
 
+
+    when (com) {
+        1 -> {
+
+            for (i in 0 until word.size) {
+                var resWordKey = letterToNumber.get(word[i])?.plus(letterToNumber.get(keyWordArr[i]) ?: 0)
+                if (resWordKey != null && resWordKey > 33)
+                    resWordKey = resWordKey?.minus(33)
+                result += letterToNumber.entries.find { it.value == resWordKey }?.key ?: '?'
+            }
+
+            println("Зашифрованное слово: $result \n\n")
+
+
+        }
+
+        2 -> {
+
+            for (i in 0 until word.size) {
+                var resWordKey = letterToNumber.get(word[i])?.minus(letterToNumber.get(keyWordArr[i]) ?: 0)
+                if (resWordKey != null && resWordKey < 1)
+                    resWordKey = resWordKey?.plus(33)
+                result += letterToNumber.entries.find { it.value == resWordKey }?.key ?: '?'
+            }
+
+            println("Зашифрованное слово: $result \n\n")
+
+
+        }
+
+    }
     println("\n\nдля продолжениея нажмите Enter")
     readln()
 }
@@ -218,7 +321,6 @@ fun task4(){
     println("Введите массив 1 посимвольно через пробел:")
 
     val list1 = readln().trim().split(" ").map { it.toInt() }.toMutableList()
-    println("list 1 = $list1")
     println("Введите массив 2 посимвольно через пробел:")
     val list2 = readln().trim().split(" ").map { it.toInt() }.toMutableList()
 
